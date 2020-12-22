@@ -14,7 +14,7 @@ class CreateCatalogsDocumentsTable extends Migration
     public function up()
     {
         Schema::create('catalogs_documents', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->timestamps();
         });
     }

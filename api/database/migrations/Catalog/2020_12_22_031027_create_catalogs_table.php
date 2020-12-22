@@ -15,9 +15,9 @@ class CreateCatalogsTable extends Migration
     {
         Schema::create('catalogs', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('uuid')->unique();
             $table->string('name');
             $table->string('nick_name')->nullable();
-            $table->string('token')->unique();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -14,7 +14,8 @@ class CreateTenantsDomainsTable extends Migration
     public function up()
     {
         Schema::create('tenants_domains', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->string('uuid')->unique();
             $table->timestamps();
         });
     }

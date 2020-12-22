@@ -17,7 +17,7 @@ class CreateTenantsTable extends Migration
         Schema::create('tenants', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned();
-            $table->string('token');
+            $table->string('uuid')->unique();
             $table->text('observations')->nullable();
             $table->integer('hits')->default(0);
             $table->integer('actived')->default(0);
