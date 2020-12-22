@@ -15,8 +15,13 @@ class CreateTenantsDomainsTable extends Migration
     {
         Schema::create('tenants_domains', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('tenant_id')->unsigned();
             $table->string('uuid')->unique();
             $table->timestamps();
+        });
+
+        Schema::table('tenants_domains', function($table) {
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');;
         });
     }
 
