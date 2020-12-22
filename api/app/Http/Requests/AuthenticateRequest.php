@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\v1\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
+// use App\Http\Requests\FormRequest;
 
 class AuthenticateRequest extends FormRequest
 {
