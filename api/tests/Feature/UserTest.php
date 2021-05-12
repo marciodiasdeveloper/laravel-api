@@ -19,4 +19,11 @@ class UserTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_a_basic_request()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+    }
 }
