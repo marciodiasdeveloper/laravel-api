@@ -1,0 +1,95 @@
+version: "3.3"
+services:
+    saas_app_api:
+        container_name: saas_app_api
+        build:
+            context: saas_app_api
+            dockerfile: Dockerfile
+        restart: always
+        env_file:
+            - ./.env
+        volumes:
+            - ${API_DIR}:/var/www/html/saas-webservice
+            - ./config/api.conf:/etc/apache2/sites-enabled/000-default.conf
+            - ./config/hosts:/etc/hosts
+        ports:
+            - ${API_PORT}:80
+        networks:
+            saas_dev_network:
+                ipv4_address: ${API_IP}
+        links:
+            - saas_mysql
+            - saas_redis
+    saas_app_frontend:
+        container_name: saas_app_frontend
+        restart: always
+        build:
+            context: saas_app_frontend
+            dockerfile: Dockerfile
+        restart: always
+        env_file:
+            - ./.env
+        volumes:
+            - ${FRONTEND_DIR}:/var/www/html/saas-client
+            - ./config/frontend.conf:/etc/apache2/sites-enabled/000-default.conf
+            - ./config/hosts:/etc/hosts
+        ports:
+           - ${FRONTEND_PORT}:80
+        networks:
+            saas_dev_network:
+                ipv4_address: ${FRONTEND_IP}
+        links:
+            - saas_app_api
+    saas_phpmyadmin:
+        container_name: saas_phpmyadmin
+        image: phpmyadmin/phpmyadmin:latest
+        ports:
+            - ${PHPMYADMIN_PORT}:80
+        environment:
+            - PMA_ARBITRARY=1
+        networks:
+            saas_dev_network:
+                ipv4_address: ${PHPMYADMIN_IP}
+        links:
+            - saas_mysql
+    saas_mysql:
+        container_name: saas_mysql
+        image: 'mysql:5.7.31'
+        env_file:
+            - ./.env
+        environment:
+            MYSQL_ROOT_PASSWORD: '${MYSQL_USER}'
+            MYSQL_USER: '${MYSQL_PASS}'
+        command: mysqld --sql_mode=""
+        restart: always
+        volumes:
+            - ${MYSQL_DIR}:/var/lib/mysql
+        ports:
+            - ${MYSQL_PORT}:${MYSQL_PORT}
+        expose:
+            - '${MYSQL_PORT}'
+        networks:
+            saas_dev_network:
+                ipv4_address: ${MYSQL_IP}
+    saas_redis:
+        image: 'redis:latest'
+        container_name: saas_redis
+        restart: always
+        env_file:
+            - ./.env
+        volumes:
+            - ${REDIS_DIR}:/data
+        ports:
+            - ${REDIS_PORT}:${REDIS_PORT}
+        expose:
+            - '${REDIS_PORT}'
+        networks:
+            saas_dev_network:
+                ipv4_address: ${REDIS_IP}
+networks:
+    saas_dev_network:
+        ipam:
+            config:
+                - subnet: ${NETWORK_SUBNET}
+volumes:
+    persistent:
