@@ -1,6 +1,6 @@
 version: "3.3"
 services:
-    ${API_CONTAINER_NAME}:
+    md_api:
         container_name: ${API_CONTAINER_NAME}
         build:
             context: api
@@ -19,8 +19,8 @@ services:
                 ipv4_address: ${API_IP}
         links:
             - ${MYSQL_CONTAINER_NAME}
-            - saas_redis
-    ${PHPMYADMIN_CONTAINER_NAME}:
+            - ${REDIS_CONTAINER_NAME}
+    md_phpmyadmin:
         container_name: ${PHPMYADMIN_CONTAINER_NAME}
         image: phpmyadmin/phpmyadmin:latest
         ports:
@@ -32,7 +32,7 @@ services:
                 ipv4_address: ${PHPMYADMIN_IP}
         links:
             - ${MYSQL_CONTAINER_NAME}
-    ${MYSQL_CONTAINER_NAME}:
+    md_mysql:
         container_name: ${MYSQL_CONTAINER_NAME}
         image: 'mysql:5.7.31'
         env_file:
@@ -51,7 +51,7 @@ services:
         networks:
             md_dev_network:
                 ipv4_address: ${MYSQL_IP}
-    ${REDIS_CONTAINER_NAME}:
+    md_redis:
         container_name: ${REDIS_CONTAINER_NAME}
         image: 'redis:latest'
         restart: always
